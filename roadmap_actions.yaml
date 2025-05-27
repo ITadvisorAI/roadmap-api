@@ -1,0 +1,63 @@
+openapi: 3.1.0
+info:
+  title: IT Transformation Roadmap API
+  version: 1.0.0
+  description: |
+    This API receives infrastructure assessment, gap analysis, and strategy files
+    to build a complete transformation roadmap including technical phases,
+    change plans, Agile epics, and Gantt timelines.
+
+servers:
+  - url: https://roadmap-api.onrender.com
+
+paths:
+  /start_roadmap:
+    post:
+      summary: Start the roadmap generation process
+      operationId: startRoadmap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - session_id
+                - email
+                - files
+              properties:
+                session_id:
+                  type: string
+                  description: Unique session identifier (e.g., Temp_20250528_user)
+                email:
+                  type: string
+                  description: User’s email address
+                gpt_module:
+                  type: string
+                  description: Always "roadmap"
+                files:
+                  type: array
+                  description: List of files received from prior modules
+                  items:
+                    type: object
+                    required:
+                      - file_name
+                      - file_url
+                      - file_type
+                    properties:
+                      file_name:
+                        type: string
+                      file_url:
+                        type: string
+                      file_type:
+                        type: string
+                status:
+                  type: string
+                  description: Processing status (should be "complete")
+      responses:
+        "200":
+          description: Roadmap analysis started successfully
+        "400":
+          description: Missing required fields
+        "500":
+          description: Internal processing error
